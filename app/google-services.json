@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501564916235",
+    "project_id": "techobyte-955cb",
+    "storage_bucket": "techobyte-955cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501564916235:android:28aa03a0a6f53a54567d0e",
+        "android_client_info": {
+          "package_name": "com.gautamjain.techobyte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501564916235-ehofjscsl3ojbm8eats0rm4d9eo088p8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBQFDzlUgtyhOXLT1DH3GgLKZn1kxuVTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501564916235-ehofjscsl3ojbm8eats0rm4d9eo088p8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
