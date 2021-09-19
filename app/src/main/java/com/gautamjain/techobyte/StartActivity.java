@@ -72,15 +72,14 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        // This feature enable user from login again and again when opening app
-//        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//        {
-//            startActivity(new Intent(StartActivity.this, MainActivity.class));
-//            finish();
-//        }
-//    }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // This feature enable user from login again and again when opening app
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+        {
+            startActivity(new Intent(StartActivity.this, MainActivity.class));
+            finish();
+        }
+    }
 }

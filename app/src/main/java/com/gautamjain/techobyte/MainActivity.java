@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -62,7 +63,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Default
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+
+        // For Redirecting to profile of user on click
+        Bundle intent = getIntent().getExtras();
+        if(intent!= null)
+        {
+            String profileId = intent.getString("publisherId");
+
+            getSharedPreferences("PROFILE", MODE_PRIVATE).edit().putString("profileId" ,profileId).apply();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+
+            bottomNavigationView.setSelectedItemId(R.id.nav_person_icon);
+        }
+        else
+        {
+            //Default
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+        }
     }
 }

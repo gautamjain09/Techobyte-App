@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -61,9 +62,13 @@ public class CommentActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();// On clicking on top bar redirected to post of user
+                finish(); // On clicking on top bar redirected to post of user
             }
         });
+
+        Intent intent = getIntent();
+        postId  = intent.getStringExtra("postId");
+        authorId = intent.getStringExtra("authorId");
 
         recyclerView = findViewById(R.id.id_recycler_post_comment);
         recyclerView.setHasFixedSize(true);
@@ -73,20 +78,14 @@ public class CommentActivity extends AppCompatActivity {
         commentAdapter = new CommentAdapter(this, commentList, postId);
         recyclerView.setAdapter(commentAdapter);
 
-        Intent intent = getIntent();
-        postId  = intent.getStringExtra("postId");
-        authorId = intent.getStringExtra("authorId");
-
         addComment = findViewById(R.id.comment_Text);
         postComment = findViewById(R.id.id_post_comment);
         imageProfileComment = findViewById(R.id.image_profile_comment);
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Setting Image Profile
         setUserImage();
-
-        // Showing comments in Commets Activity
-        getComment();
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +100,9 @@ public class CommentActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Showing comments in Comment Activity
+        getComment();
     }
 
     private void getComment()
@@ -126,11 +128,18 @@ public class CommentActivity extends AppCompatActivity {
     private void putComment() {
 
         HashMap<String, Object> mp =  new HashMap<>();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Comments").child(postId);
+
+        String id = ref.push().getKey();
+
+        mp.put("id", id);
         mp.put("comments", addComment.getText().toString());
         mp.put("Publisher", firebaseUser.getUid());
 
-        FirebaseDatabase.getInstance().getReference().child("Comments").child(postId).push().setValue(mp)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        addComment.setText("");
+
+        ref.child(id).setValue(mp).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful())
@@ -167,6 +176,5 @@ public class CommentActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-
 
 }

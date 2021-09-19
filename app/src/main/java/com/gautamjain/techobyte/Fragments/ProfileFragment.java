@@ -1,5 +1,7 @@
 package com.gautamjain.techobyte.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView imageProfile;
     private ImageView options;
+
     private TextView posts;
     private TextView followers;
     private TextView following;
@@ -37,8 +40,10 @@ public class ProfileFragment extends Fragment {
     private TextView bio;
 
     private Button editProfile;
+
     private ImageView myPictures;
     private ImageView savedPictures;
+
     private FirebaseUser firebaseUser;
 
     String profileId;
@@ -46,6 +51,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String data = getContext().getSharedPreferences("PROFILE", Context.MODE_PRIVATE).getString("profileId", "none");
+
+        if(data.equals("none"))
+        {
+            profileId = firebaseUser.getUid(); //if we are clicking on our on username or id
+        }
+        else
+        {
+            profileId = data; //if we are clicking on someone else id or username
+        }
 
         imageProfile = view.findViewById(R.id.id_profile_image);
         fullname = view.findViewById(R.id.fullname);
@@ -61,15 +79,73 @@ public class ProfileFragment extends Fragment {
         myPictures = view.findViewById(R.id.my_pictures);
         savedPictures = view.findViewById(R.id.saved_pictures);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        profileId = firebaseUser.getUid();
-
         userInfo();
         getFollowersAndFollowingCount();
         getPostCount();
 
+        if(profileId.equals(firebaseUser.getUid()))
+        {
+            editProfile.setText("Edit Profile");
+        }
+        else
+        {
+            checkFollowingStatus();
+        }
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String btnText = editProfile.getText().toString();
+
+                if (btnText.equals("Edit profile"))
+                {
+//                    startActivity(new Intent(getContext(), EditProfileActivity.class));
+                }
+                else
+                {
+                    if (btnText.equals("follow"))
+                    {
+                        FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                                .child("following").child(profileId).setValue(true);
+
+                        FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId)
+                                .child("followers").child(firebaseUser.getUid()).setValue(true);
+                    }
+                    else
+                    {
+                        FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                                .child("following").child(profileId).removeValue();
+
+                        FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId)
+                                .child("followers").child(firebaseUser.getUid()).removeValue();
+                    }
+                }
+            }
+        });
+
         return view;
 
+    }
+
+    private void checkFollowingStatus() {
+
+        FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid()).child("following")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.child(profileId).exists())
+                        {
+                            editProfile.setText("following");
+                        }
+                        else
+                        {
+                            editProfile.setText("follow");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                });
     }
 
     private void getPostCount() {
@@ -98,14 +174,14 @@ public class ProfileFragment extends Fragment {
 
         FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId).child("following").
                 addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                following.setText("" + snapshot.getChildrenCount());
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        following.setText("" + snapshot.getChildrenCount());
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
 
         FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId).child("followers").
                 addValueEventListener(new ValueEventListener() {
