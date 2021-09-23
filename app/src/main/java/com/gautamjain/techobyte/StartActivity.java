@@ -82,4 +82,5 @@ public class StartActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }

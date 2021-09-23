@@ -121,48 +121,48 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder>{
             }
         });
 
+//        <------------------------------------- Saved Images------------------------------------------->
 
+        isSaved(post.getPostId(), holder.save);
 
-
+        holder.save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.save.getTag().equals("save"))
+                {
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid())
+                            .child(post.getPostId()).setValue(true);
+                }
+                else
+                {
+                    FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid())
+                            .child(post.getPostId()).removeValue();
+                }
+            }
+        });
     }
 
-    @Override
-    public int getItemCount() {
-        return mPost.size();
-    }
+    private void isSaved(String postId, ImageView save) {
 
-    public class Viewholder extends RecyclerView.ViewHolder{
+        FirebaseDatabase.getInstance().getReference().child("Saves").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(postId).exists())
+                {
+                    save.setImageResource(R.drawable.ic_saved_black);
+                    save.setTag("saved");
+                }
+                else
+                {
+                    save.setImageResource(R.drawable.ic_save);
+                    save.setTag("save");
+                }
+            }
 
-        public ImageView profileImage;
-        public ImageView imagePost;
-        public ImageView like;
-        public ImageView comment;
-        public ImageView save;
-        public ImageView more;
-
-        public TextView username;
-        public TextView no_of_likes;
-        public TextView author;
-        public TextView no_of_comments;
-        public SocialTextView description;
-
-        public Viewholder(View itemView) {
-            super(itemView);
-
-            profileImage = itemView.findViewById(R.id.profile_image_post);
-            imagePost = itemView.findViewById(R.id.id_Image_post);
-            like = itemView.findViewById(R.id.id_like);
-            save = itemView.findViewById(R.id.id_save);
-            comment = itemView.findViewById(R.id.id_comment);
-            more = itemView.findViewById(R.id.id_more);
-
-            username = itemView.findViewById(R.id.username_post);
-            no_of_likes = itemView.findViewById(R.id.id_no_of_likes);
-            no_of_comments = itemView.findViewById(R.id.id_no_of_Comments);
-            author = itemView.findViewById(R.id.id_authorname);
-            description = itemView.findViewById(R.id.description);
-
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
 //    <------------------------------------ is Liked ------------------------------------------------>
@@ -219,4 +219,42 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder>{
         });
     }
 
+    @Override
+    public int getItemCount() {
+        return mPost.size();
+    }
+
+    public class Viewholder extends RecyclerView.ViewHolder{
+
+        public ImageView profileImage;
+        public ImageView imagePost;
+        public ImageView like;
+        public ImageView comment;
+        public ImageView save;
+        public ImageView more;
+
+        public TextView username;
+        public TextView no_of_likes;
+        public TextView author;
+        public TextView no_of_comments;
+        public SocialTextView description;
+
+        public Viewholder(View itemView) {
+            super(itemView);
+
+            profileImage = itemView.findViewById(R.id.profile_image_post);
+            imagePost = itemView.findViewById(R.id.id_Image_post);
+            like = itemView.findViewById(R.id.id_like);
+            save = itemView.findViewById(R.id.id_save);
+            comment = itemView.findViewById(R.id.id_comment);
+            more = itemView.findViewById(R.id.id_more);
+
+            username = itemView.findViewById(R.id.username_post);
+            no_of_likes = itemView.findViewById(R.id.id_no_of_likes);
+            no_of_comments = itemView.findViewById(R.id.id_no_of_Comments);
+            author = itemView.findViewById(R.id.id_authorname);
+            description = itemView.findViewById(R.id.description);
+
+        }
+    }
 }

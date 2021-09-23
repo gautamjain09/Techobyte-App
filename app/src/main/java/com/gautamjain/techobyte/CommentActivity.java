@@ -176,5 +176,4 @@ public class CommentActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
-
 }
