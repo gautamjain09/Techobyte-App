@@ -9,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gautamjain.techobyte.CommentActivity;
+import com.gautamjain.techobyte.Fragments.PostDetailFragment;
+import com.gautamjain.techobyte.Fragments.ProfileFragment;
 import com.gautamjain.techobyte.Modal.Post;
 import com.gautamjain.techobyte.Modal.User;
 import com.gautamjain.techobyte.R;
@@ -140,29 +143,77 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder>{
                 }
             }
         });
+
+        // Redirecting to profile of user
+        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                        .putString("profileId", post.getPublisher()).apply();
+
+                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+            }
+        });
+
+        // Redirecting to profile of user
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                        .putString("profileId", post.getPublisher()).apply();
+
+                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+            }
+        });
+
+        // Redirecting to profile of user
+        holder.author.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                        .putString("profileId", post.getPublisher()).apply();
+
+                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+            }
+        });
+
+        // Redirecting to Post Details
+        holder.imagePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postId", post.getPostId()).apply();
+
+                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PostDetailFragment()).commit();
+            }
+        });
+
     }
 
     private void isSaved(String postId, ImageView save) {
 
         FirebaseDatabase.getInstance().getReference().child("Saves").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(postId).exists())
-                {
-                    save.setImageResource(R.drawable.ic_saved_black);
-                    save.setTag("saved");
-                }
-                else
-                {
-                    save.setImageResource(R.drawable.ic_save);
-                    save.setTag("save");
-                }
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.child(postId).exists())
+                        {
+                            save.setImageResource(R.drawable.ic_saved_black);
+                            save.setTag("saved");
+                        }
+                        else
+                        {
+                            save.setImageResource(R.drawable.ic_save);
+                            save.setTag("save");
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
     }
 
 //    <------------------------------------ is Liked ------------------------------------------------>
@@ -254,7 +305,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder>{
             no_of_comments = itemView.findViewById(R.id.id_no_of_Comments);
             author = itemView.findViewById(R.id.id_authorname);
             description = itemView.findViewById(R.id.description);
-
         }
     }
 }
