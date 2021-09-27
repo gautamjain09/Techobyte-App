@@ -144,41 +144,41 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder>{
             }
         });
 
-        // Redirecting to profile of user
-        holder.profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
-                        .putString("profileId", post.getPublisher()).apply();
-
-                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
-            }
-        });
-
-        // Redirecting to profile of user
-        holder.username.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
-                        .putString("profileId", post.getPublisher()).apply();
-
-                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
-            }
-        });
-
-        // Redirecting to profile of user
-        holder.author.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
-                        .putString("profileId", post.getPublisher()).apply();
-
-                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
-            }
-        });
+//        // Redirecting to profile of user
+//        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+//                        .putString("profileId", post.getPublisher()).apply();
+//
+//                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+//            }
+//        });
+//
+//        // Redirecting to profile of user
+//        holder.username.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+//                        .putString("profileId", post.getPublisher()).apply();
+//
+//                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+//            }
+//        });
+//
+//        // Redirecting to profile of user
+//        holder.author.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+//                        .putString("profileId", post.getPublisher()).apply();
+//
+//                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container, new ProfileFragment()).commit();
+//            }
+//        });
 
         // Redirecting to Post Details
         holder.imagePost.setOnClickListener(new View.OnClickListener() {
